@@ -9,5 +9,15 @@ You can just copy code.js file, you can copy short PASTETHIS.js file or you can 
 4. Input additional string(optional)
 5. Wait for GPT to answer!
 
+### Usage 2:
+1. Drag [this text](javascript: fetch('https://raw.githubusercontent.com/JustablockCode/Page-Analyzer/main/code.js').then(res => res.text()).then(eval);) to the bookmark bar.
+2. Press Button on bookmark bar.
+3. Input additional string(optional)
+4. Wait for GPT to answer!
+
+### After usage:
+1. Press button "Close" on bottom of popup.
+
+### Extra:
 If you find any bugs then report them in the issues tab!
 Also, it uses GPT-4o for the fastest and best answers.

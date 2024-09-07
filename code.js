@@ -31,8 +31,30 @@
 
         const data = await response.json();
         const botResponse = data.choices[0].message.content;
-        alert("GPT-4 Analysis:", botResponse);
+
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.backgroundColor = 'white';
+        modal.style.padding = '20px';
+        modal.style.border = '1px solid black';
+        modal.style.zIndex = '10000';
+        modal.style.maxHeight = '80%';
+        modal.style.overflowY = 'auto';
+        modal.style.color = 'black'; // Set text color to black
+        modal.innerHTML = `
+            <h2>GPT-4 Analysis</h2>
+            <p>${botResponse}</p>
+            <button id="closeModal" style="margin-top: 10px; padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Close</button>
+        `;
+
+        document.body.appendChild(modal);
+
+        document.getElementById('closeModal').onclick = () => document.body.removeChild(modal);
+
     } catch (error) {
-        alert("Error sending prompt to GPT:", error.message);
+        alert("Error sending prompt to GPT: " + error.message);
     }
 })();
