@@ -31,8 +31,8 @@
 
         const data = await response.json();
         const botResponse = data.choices[0].message.content;
-        console.log("GPT-4 Analysis:", botResponse);
+        alert("GPT-4 Analysis:", botResponse);
     } catch (error) {
-        console.error("Error sending prompt to GPT:", error.message);
+        alert("Error sending prompt to GPT:", error.message);
     }
 })();
