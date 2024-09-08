@@ -11,7 +11,7 @@ You can just copy code.js file, you can copy short PASTETHIS.js file or you can 
 
 ### Usage 2:
 1. Create new bookmark.
-2. In bookmark link put this: javascript: `fetch('https://raw.githubusercontent.com/JustablockCode/Page-Analyzer/main/code.js').then(res => res.text()).then(eval);`
+2. In bookmark link put this: `javascript: fetch('https://raw.githubusercontent.com/JustablockCode/Page-Analyzer/main/code.js').then(res => res.text()).then(eval);`
 3. Press Button on bookmark bar.
 4. Input additional string(optional)
 5. Wait for GPT to answer!
