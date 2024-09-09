@@ -6,15 +6,17 @@ You can just copy code.js file, you can copy short PASTETHIS.js file or you can 
 1. Open console(on windows: ctr + shift + i and then press console)
 2. Paste the code into the browser console.
 3. Press enter.
-4. Input additional string(optional)
-5. Wait for GPT to answer!
+4. Choose model(If you get error 500 then choose another model).
+5. Input additional string(optional)
+6. Wait for GPT to answer!
 
 ### Usage 2:
 1. Create new bookmark.
 2. In bookmark link put this: `javascript: fetch('https://raw.githubusercontent.com/JustablockCode/Page-Analyzer/main/code.js').then(res => res.text()).then(eval);`
 3. Press Button on bookmark bar.
-4. Input additional string(optional)
-5. Wait for GPT to answer!
+4. Choose model(If you get error 500 then choose another model).
+5. Input additional string(optional)
+6. Wait for GPT to answer!
 
 ### After usage:
 1. Press button "Close" on bottom of popup.
