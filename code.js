@@ -1,6 +1,38 @@
 (async () => {
     const api_url = 'https://reverse.mubi.tech/v1/chat/completions';
-    const model = 'gpt-4o';
+    
+    async function fetchAndGetReqModels() {
+        try {
+            const response = await fetch(api_url.replace('/chat/completions', '/models'));
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            let models = [];
+            data.data.forEach(model => {
+                if (model.type !== "chat.completions") return;
+                models.push({ text: model.id, value: model.id }); 
+            });
+            return models;
+        } catch (error) {
+            console.error("Error fetching models:", error);
+            return [];
+        }
+    }
+
+    const models = await fetchAndGetReqModels();
+    if (models.length === 0) {
+        alert("No models available.");
+        return;
+    }
+    
+    const modelNames = models.map(model => model.text).join("\n");
+    const selectedModel = prompt(`Available models:\n${modelNames}\n\nEnter the model ID you want to use:`, models[0].value);
+    
+    if (!selectedModel) {
+        alert("No model selected.");
+        return;
+    }
 
     const content = document.body.innerText || document.body.textContent;
 
@@ -20,7 +52,7 @@
                 'Referer': 'https://gptcall.net/'
             },
             body: JSON.stringify({
-                model: model,
+                model: selectedModel,
                 messages: messages
             }),
         });
@@ -43,7 +75,7 @@
         modal.style.zIndex = '10000';
         modal.style.maxHeight = '80%';
         modal.style.overflowY = 'auto';
-        modal.style.color = 'black'; // Set text color to black
+        modal.style.color = 'black';
         modal.innerHTML = `
             <h2>GPT-4 Analysis</h2>
             <p>${botResponse}</p>
