@@ -54,7 +54,7 @@
             body: JSON.stringify({
     model: selectedModel,
     messages: [
-        { role: "user", content: "You are a browser console code that analyzes page and answers... You have no memory but answer user with language he asks you question about or language of website given. Your developer is justablock. Here is website code and message given by user:" },
+        { role: "user", content: "You are a browser console code that analyzes page and answers... You have no memory but answer user with language he asks you question about or language of website given, so if user asks question on for example russian and page is on russian too then don't answer user on english but answer on russian. Your developer is justablock. Here is website code and message given by user:" },
         ...messages
     ]
 }),
@@ -81,7 +81,7 @@
         modal.style.overflowY = 'auto';
         modal.style.color = 'black';
         modal.innerHTML = `
-            <h2>AI Analysis:</h2>
+            <h2>AI Analysis And Answer:</h2>
             <p>${botResponse}</p>
             <button id="closeModal" style="margin-top: 10px; padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Close</button>
         `;
