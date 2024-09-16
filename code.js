@@ -52,9 +52,13 @@
                 'Referer': 'https://gptcall.net/'
             },
             body: JSON.stringify({
-                model: selectedModel,
-                messages: messages
-            }),
+    model: selectedModel,
+    messages: [
+        { role: "user", content: "You are a browser console code that analyzes page and answers... You have no memory but answer user with language he asks you question about or language of website given. Your developer is justablock. Here is website code and message given by user:" },
+        ...messages
+    ]
+}),
+
         });
 
         if (!response.ok) {
