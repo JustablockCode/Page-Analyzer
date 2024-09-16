@@ -91,6 +91,6 @@
         document.getElementById('closeModal').onclick = () => document.body.removeChild(modal);
 
     } catch (error) {
-        alert("Error sending prompt to GPT: " + error.message);
+        alert("Error sending prompt to AI: " + error.message);
     }
 })();
