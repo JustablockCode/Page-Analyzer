@@ -23,4 +23,4 @@ You can just copy code.js file, you can copy short PASTETHIS.js file or you can 
 
 ### Extra:
 If you find any bugs then report them in the issues tab!
-Also, it uses GPT-4o for the fastest and best answers.
+Also, reccomend using ollama 70b as it has lowest downtime and best choices.
