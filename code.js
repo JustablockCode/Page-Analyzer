@@ -81,7 +81,7 @@
         modal.style.overflowY = 'auto';
         modal.style.color = 'black';
         modal.innerHTML = `
-            <h2>GPT-4 Analysis</h2>
+            <h2>AI Analysis:</h2>
             <p>${botResponse}</p>
             <button id="closeModal" style="margin-top: 10px; padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Close</button>
         `;
