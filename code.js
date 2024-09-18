@@ -1,6 +1,7 @@
 (async () => {
     const api_url = 'https://reverse.mubi.tech/v1/chat/completions';
-    
+
+    // Function to fetch available models
     async function fetchAndGetReqModels() {
         try {
             const response = await fetch(api_url.replace('/chat/completions', '/models'));
@@ -11,7 +12,7 @@
             let models = [];
             data.data.forEach(model => {
                 if (model.type !== "chat.completions") return;
-                models.push({ text: model.id, value: model.id }); 
+                models.push({ text: model.id, value: model.id });
             });
             return models;
         } catch (error) {
@@ -20,15 +21,53 @@
         }
     }
 
+    // Create and display a modal with a dropdown for model selection
+    function showModelSelectionModal(models) {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.backgroundColor = 'white'; // Set background for light mode
+        modal.style.padding = '20px';
+        modal.style.border = '1px solid black';
+        modal.style.zIndex = '10000';
+        modal.style.maxHeight = '80%';
+        modal.style.overflowY = 'auto';
+        modal.style.color = 'black'; // Text color for light mode
+        modal.style.borderRadius = '8px'; // Optional for rounded corners
+        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Adds shadow for better visibility
+
+        const modelOptions = models.map(model => `<option value="${model.value}">${model.text}</option>`).join('');
+
+        modal.innerHTML = `
+            <h2 style="color: black;">Select a Model</h2>
+            <select id="modelSelect" style="width: 100%; padding: 5px; color: black; background-color: white; border: 1px solid black;">
+                ${modelOptions}
+            </select>
+            <br>
+            <button id="selectModelButton" style="margin-top: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Select Model</button>
+        `;
+
+        document.body.appendChild(modal);
+
+        return new Promise((resolve) => {
+            document.getElementById('selectModelButton').onclick = () => {
+                const selectedModel = document.getElementById('modelSelect').value;
+                document.body.removeChild(modal);
+                resolve(selectedModel);
+            };
+        });
+    }
+
+    // Fetch models and show the model selection modal
     const models = await fetchAndGetReqModels();
     if (models.length === 0) {
         alert("No models available.");
         return;
     }
-    
-    const modelNames = models.map(model => model.text).join("\n");
-    const selectedModel = prompt(`Available models:\n${modelNames}\n\nEnter the model ID you want to use:`, models[0].value);
-    
+
+    const selectedModel = await showModelSelectionModal(models);
     if (!selectedModel) {
         alert("No model selected.");
         return;
@@ -52,13 +91,12 @@
                 'Referer': 'https://gptcall.net/'
             },
             body: JSON.stringify({
-    model: selectedModel,
-    messages: [
-        { role: "user", content: "You are a browser console code that analyzes page and answers... You have no memory but answer user with language he asks you question about or language of website given, so if user asks question on for example russian and page is on russian too then don't answer user on english but answer on russian. Your developer is justablock. Here is website code and message given by user:" },
-        ...messages
-    ]
-}),
-
+                model: selectedModel,
+                messages: [
+                    { role: "user", content: "You are a browser console code that analyzes a webpage and provides answers. You have no memory, and you must respond in the language of the webpage or the language of the user's input. If the user asks a question in a specific language or if the webpage is in a certain language, respond in that language, not in English by default. Your developer is Justablock. Here is the webpage content and the user's message for your analysis:" },
+                    ...messages
+                ]
+            }),
         });
 
         if (!response.ok) {
@@ -73,13 +111,15 @@
         modal.style.top = '50%';
         modal.style.left = '50%';
         modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.backgroundColor = 'white';
+        modal.style.backgroundColor = 'white'; // Background for light mode
         modal.style.padding = '20px';
         modal.style.border = '1px solid black';
         modal.style.zIndex = '10000';
         modal.style.maxHeight = '80%';
         modal.style.overflowY = 'auto';
-        modal.style.color = 'black';
+        modal.style.color = 'black'; // Text color for light mode
+        modal.style.borderRadius = '8px'; // Optional rounded corners
+        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Adds shadow for better visibility
         modal.innerHTML = `
             <h2>AI Analysis And Answer:</h2>
             <p>${botResponse}</p>
