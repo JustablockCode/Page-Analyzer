@@ -1,4 +1,4 @@
-## This is javascript code for the browser console that will use Mubilop's API(thanks to him:)) to tell GPT the contents of the page and return the analyzed string.
+## This is javascript code for the browser console that will use cicerorph's API(thanks to cicerorph)) to tell GPT the contents of the page and return the analyzed string.
 ### Getting code:
 You can just copy code.js file, you can copy short PASTETHIS.js file or you can copy this: `fetch('https://raw.githubusercontent.com/JustablockCode/Page-Analyzer/main/code.js').then(res => res.text()).then(eval);`
 
