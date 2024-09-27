@@ -9,12 +9,9 @@
                 throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
-            let models = [];
-            data.data.forEach(model => {
-                if (model.type !== "chat.completions") return;
-                models.push({ text: model.id, value: model.id });
-            });
-            return models;
+            return data.data
+                .filter(model => model.type === "chat.completions")
+                .map(model => ({ text: model.id, value: model.id }));
         } catch (error) {
             console.error("Error fetching models:", error);
             return [];
@@ -24,36 +21,61 @@
     // Create and display a modal with a dropdown for model selection
     function showModelSelectionModal(models) {
         const modal = document.createElement('div');
-        modal.style.position = 'fixed';
-        modal.style.top = '50%';
-        modal.style.left = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.backgroundColor = 'white'; // Set background for light mode
-        modal.style.padding = '20px';
-        modal.style.border = '1px solid black';
-        modal.style.zIndex = '10000';
-        modal.style.maxHeight = '80%';
-        modal.style.overflowY = 'auto';
-        modal.style.color = 'black'; // Text color for light mode
-        modal.style.borderRadius = '8px'; // Optional for rounded corners
-        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Adds shadow for better visibility
+        Object.assign(modal.style, {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            border: '1px solid black',
+            zIndex: '10000',
+            maxHeight: '80%',
+            overflowY: 'auto',
+            color: 'black',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+        });
 
-        const modelOptions = models.map(model => `<option value="${model.value}">${model.text}</option>`).join('');
+        const select = document.createElement('select');
+        select.style.width = '100%';
+        select.style.padding = '5px';
+        select.style.color = 'black';
+        select.style.backgroundColor = 'white';
+        select.style.border = '1px solid black';
 
-        modal.innerHTML = `
-            <h2 style="color: black;">Select a Model</h2>
-            <select id="modelSelect" style="width: 100%; padding: 5px; color: black; background-color: white; border: 1px solid black;">
-                ${modelOptions}
-            </select>
-            <br>
-            <button id="selectModelButton" style="margin-top: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Select Model</button>
-        `;
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model.value;
+            option.textContent = model.text;
+            select.appendChild(option);
+        });
+
+        const button = document.createElement('button');
+        button.textContent = 'Select Model';
+        Object.assign(button.style, {
+            marginTop: '10px',
+            padding: '5px 10px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer'
+        });
+
+        const heading = document.createElement('h2');
+        heading.textContent = 'Select a Model';
+        heading.style.color = 'black';
+
+        modal.appendChild(heading);
+        modal.appendChild(select);
+        modal.appendChild(document.createElement('br'));
+        modal.appendChild(button);
 
         document.body.appendChild(modal);
 
         return new Promise((resolve) => {
-            document.getElementById('selectModelButton').onclick = () => {
-                const selectedModel = document.getElementById('modelSelect').value;
+            button.onclick = () => {
+                const selectedModel = select.value;
                 document.body.removeChild(modal);
                 resolve(selectedModel);
             };
@@ -74,7 +96,6 @@
     }
 
     const content = document.body.innerText || document.body.textContent;
-
     let additionalComments = prompt("Add any additional comments or context (optional):", "");
 
     let messages = [{ role: "user", content }];
@@ -106,29 +127,47 @@
         const data = await response.json();
         const botResponse = data.choices[0].message.content;
 
-        const modal = document.createElement('div');
-        modal.style.position = 'fixed';
-        modal.style.top = '50%';
-        modal.style.left = '50%';
-        modal.style.transform = 'translate(-50%, -50%)';
-        modal.style.backgroundColor = 'white'; // Background for light mode
-        modal.style.padding = '20px';
-        modal.style.border = '1px solid black';
-        modal.style.zIndex = '10000';
-        modal.style.maxHeight = '80%';
-        modal.style.overflowY = 'auto';
-        modal.style.color = 'black'; // Text color for light mode
-        modal.style.borderRadius = '8px'; // Optional rounded corners
-        modal.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Adds shadow for better visibility
-        modal.innerHTML = `
-            <h2>AI Analysis And Answer:</h2>
-            <p>${botResponse}</p>
-            <button id="closeModal" style="margin-top: 10px; padding: 5px 10px; background-color: #f44336; color: white; border: none; cursor: pointer;">Close</button>
-        `;
+        const resultModal = document.createElement('div');
+        Object.assign(resultModal.style, {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            border: '1px solid black',
+            zIndex: '10000',
+            maxHeight: '80%',
+            overflowY: 'auto',
+            color: 'black',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+        });
 
-        document.body.appendChild(modal);
+        const responseHeading = document.createElement('h2');
+        responseHeading.textContent = "AI Analysis And Answer:";
+        
+        const responseParagraph = document.createElement('p');
+        responseParagraph.textContent = botResponse;
 
-        document.getElementById('closeModal').onclick = () => document.body.removeChild(modal);
+        const closeButton = document.createElement('button');
+        closeButton.textContent = "Close";
+        Object.assign(closeButton.style, {
+            marginTop: '10px',
+            padding: '5px 10px',
+            backgroundColor: '#f44336',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer'
+        });
+
+        resultModal.appendChild(responseHeading);
+        resultModal.appendChild(responseParagraph);
+        resultModal.appendChild(closeButton);
+
+        document.body.appendChild(resultModal);
+
+        closeButton.onclick = () => document.body.removeChild(resultModal);
 
     } catch (error) {
         alert("Error sending prompt to AI: " + error.message);
