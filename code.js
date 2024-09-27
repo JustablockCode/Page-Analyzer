@@ -1,7 +1,6 @@
 (async () => {
     const api_url = 'https://reverse.mubi.tech/v1/chat/completions';
 
-    // Function to fetch available models
     async function fetchAndGetReqModels() {
         try {
             const response = await fetch(api_url.replace('/chat/completions', '/models'));
@@ -13,12 +12,37 @@
                 .filter(model => model.type === "chat.completions")
                 .map(model => ({ text: model.id, value: model.id }));
         } catch (error) {
-            console.error("Error fetching models:", error);
             return [];
         }
     }
 
-    // Create and display a modal with a dropdown for model selection
+    function createButton(text, bgColor, textColor, hoverColor) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        Object.assign(button.style, {
+            marginTop: '10px',
+            padding: '5px 10px',
+            backgroundColor: bgColor,
+            color: textColor,
+            border: 'none',
+            cursor: 'pointer',
+            borderRadius: '6px',
+            transition: 'background-color 0.3s, transform 0.2s',
+        });
+
+        button.onmouseover = () => {
+            button.style.backgroundColor = hoverColor;
+            button.style.transform = 'scale(1.05)';
+        };
+
+        button.onmouseout = () => {
+            button.style.backgroundColor = bgColor;
+            button.style.transform = 'scale(1)';
+        };
+
+        return button;
+    }
+
     function showModelSelectionModal(models) {
         const modal = document.createElement('div');
         Object.assign(modal.style, {
@@ -33,8 +57,8 @@
             maxHeight: '80%',
             overflowY: 'auto',
             color: 'black',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+            borderRadius: '12px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         });
 
         const select = document.createElement('select');
@@ -51,16 +75,7 @@
             select.appendChild(option);
         });
 
-        const button = document.createElement('button');
-        button.textContent = 'Select Model';
-        Object.assign(button.style, {
-            marginTop: '10px',
-            padding: '5px 10px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer'
-        });
+        const button = createButton('Select Model', '#4CAF50', 'white', '#45a049');
 
         const heading = document.createElement('h2');
         heading.textContent = 'Select a Model';
@@ -82,7 +97,6 @@
         });
     }
 
-    // Fetch models and show the model selection modal
     const models = await fetchAndGetReqModels();
     if (models.length === 0) {
         alert("No models available.");
@@ -96,7 +110,46 @@
     }
 
     const content = document.body.innerText || document.body.textContent;
-    let additionalComments = prompt("Add any additional comments or context (optional):", "");
+
+    function showInputModal() {
+        const modal = document.createElement('div');
+        Object.assign(modal.style, {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            padding: '20px',
+            border: '1px solid black',
+            zIndex: '10000',
+            borderRadius: '12px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        });
+
+        const input = document.createElement('textarea');
+        input.placeholder = 'Add any additional comments or context (optional)';
+        input.style.width = '100%';
+        input.style.height = '100px';
+        input.style.marginBottom = '10px';
+
+        const button = createButton('Submit', '#4CAF50', 'white', '#45a049');
+
+        modal.appendChild(input);
+        modal.appendChild(document.createElement('br'));
+        modal.appendChild(button);
+
+        document.body.appendChild(modal);
+
+        return new Promise((resolve) => {
+            button.onclick = () => {
+                const additionalComments = input.value.trim();
+                document.body.removeChild(modal);
+                resolve(additionalComments);
+            };
+        });
+    }
+
+    const additionalComments = await showInputModal();
 
     let messages = [{ role: "user", content }];
     if (additionalComments) {
@@ -114,7 +167,7 @@
             body: JSON.stringify({
                 model: selectedModel,
                 messages: [
-                    { role: "user", content: "You are a browser console code that analyzes a webpage and provides answers. You have no memory, and you must respond in the language of the webpage or the language of the user's input. If the user asks a question in a specific language or if the webpage is in a certain language, respond in that language, not in English by default. Your developer is Justablock. Here is the webpage content and the user's message for your analysis:" },
+                    { role: "user", content: "You are a browser console code that analyzes a webpage and provides answers. You have no memory, and you must respond in the language of the webpage or the language of the user's input. If the user asks a question in a specific language or if the webpage is in a certain language, respond in that language, not in English by default. Your developer is Justablock. Here is the webpage content and the user's message for your analysis: If sending *text*, it won't show 'fat', and neither `code` nor anything else like that will work." },
                     ...messages
                 ]
             }),
@@ -140,26 +193,17 @@
             maxHeight: '80%',
             overflowY: 'auto',
             color: 'black',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+            borderRadius: '12px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         });
 
         const responseHeading = document.createElement('h2');
         responseHeading.textContent = "AI Analysis And Answer:";
-        
+
         const responseParagraph = document.createElement('p');
         responseParagraph.textContent = botResponse;
 
-        const closeButton = document.createElement('button');
-        closeButton.textContent = "Close";
-        Object.assign(closeButton.style, {
-            marginTop: '10px',
-            padding: '5px 10px',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer'
-        });
+        const closeButton = createButton("Close", '#f44336', 'white', '#e53935');
 
         resultModal.appendChild(responseHeading);
         resultModal.appendChild(responseParagraph);
