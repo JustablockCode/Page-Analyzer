@@ -167,7 +167,7 @@
             body: JSON.stringify({
                 model: selectedModel,
                 messages: [
-                    { role: "user", content: "You are a browser console code that analyzes a webpage and provides answers. You have no memory, and you must respond in the language of the webpage or the language of the user's input. If the user asks a question in a specific language or if the webpage is in a certain language, respond in that language, not in English by default. Your developer is Justablock. Here is the webpage content and the user's message for your analysis: If sending *text*, it won't show 'fat', and neither `code` nor anything else like that will work." },
+                    { role: "user", content: "You are a browser console code that analyzes a webpage and provides answers. You have no memory, and you must respond in the language of the webpage or the language of the user's input. If the user asks a question in a specific language or if the webpage is in a certain language, respond in that language, not in English by default. Your developer is Justablock. Here is the webpage content and the user's message for your analysis:" },
                     ...messages
                 ]
             }),
