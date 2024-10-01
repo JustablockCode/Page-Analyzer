@@ -1,20 +1,23 @@
 (async () => {
     const api_url = 'https://proxy.mubilop.tech/v1/chat/completions';
 
-    async function fetchAndGetReqModels() {
+async function fetchAndGetReqModels() {
         try {
             const response = await fetch(api_url.replace('/chat/completions', '/models'));
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
+
+            // Filter the models based on type "chat.completions"
             return data.data
-                .filter(model => model.type === "chat.completions")
-                .map(model => ({ text: model.id, value: model.id }));
+                .filter(model => model.type === "chat.completions")  // Only include "chat.completions" models
+                .map(model => ({ text: model.id, value: model.id }));  // Map to desired structure
         } catch (error) {
             return [];
         }
     }
+
 
     function createButton(text, bgColor, textColor, hoverColor) {
         const button = document.createElement('button');
