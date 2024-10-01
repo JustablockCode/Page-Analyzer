@@ -1,5 +1,5 @@
 (async () => {
-    const api_url = 'https://reverse.mubi.tech/v1/chat/completions';
+    const api_url = 'https://proxy.mubi.tech/v1/chat/completions';
 
     async function fetchAndGetReqModels() {
         try {
