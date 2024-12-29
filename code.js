@@ -1,5 +1,5 @@
 (async () => {
-    const api_url = 'https://penguinai.milosantos.com/v1/chat/completions';
+    const api_url = 'https://api.penguinai.tech/v1/chat/completions';
 
 async function fetchAndGetReqModels() {
         try {
